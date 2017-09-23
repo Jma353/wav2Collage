@@ -41,12 +41,11 @@ def windowed_power_spectrum(window, hz):
   # Resultant
   return freq_array, power
 
-def circle_tuples(amps, hzs, dbs, base):
+def circle_tuples(amps, hzs, dbs):
   assert len(amps) == len(hzs) == len(dbs)
   # Length of all of them
   n = len(amps)
   # Scaling factors
-  amp_max, amp_min = np.max(amps), np.min(amps)
   hz_max, hz_min = np.max(hzs), np.min(hzs)
   db_max, db_min = np.max(dbs), np.min(dbs)
 
@@ -54,8 +53,8 @@ def circle_tuples(amps, hzs, dbs, base):
   result = []
   for i in xrange(0, n):
     amp = amps[i]
-    hz = (base * (hzs[i] - hz_min)) / float(hz_max - hz_min)
-    db = (base * (dbs[i] - db_min)) / float(db_max - db_min)
+    hz = (BASE * (hzs[i] - hz_min)) / float(hz_max - hz_min)
+    db = (BASE * (dbs[i] - db_min)) / float(db_max - db_min)
     result.append((amp, hz, db))
   return result
 
@@ -76,12 +75,11 @@ def gen_collage(filename):
   hz_db = top_freq_db_per_s(s1, rate, hz, seconds_array)
 
   # Tuples for drawing
-  circ_tups = \
-    circle_tuples(amps, [t[0] for t in hz_db], [t[1] for t in hz_db], BASE)
+  circ_tups = circle_tuples(amps, [t[0] for t in hz_db], [t[1] for t in hz_db])
 
   # Collect those circles
   circs = []
-  amps = []
+  amps = [] # needed for the y-limits
   for i, tup in enumerate(circ_tups):
     # Position driven by time (x) and amplitude (y)
     # Circle radius driven by scaled Hz (radius)
