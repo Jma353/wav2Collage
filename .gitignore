@@ -1,0 +1,4 @@
+*.wav
+*.pyc
+venv
+*.DS_Store
