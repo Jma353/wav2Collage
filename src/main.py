@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 
 BASE = 10
 
+def random_color_hex():
+  return '#%02x%02x%02x' % tuple(np.floor(np.random.rand(3, 1) * 255))
+
 def amps_per_s(s1, rate, seconds_array):
   result = []
   for sec in seconds_array:
@@ -48,7 +51,6 @@ def circle_tuples(amps, hzs, dbs):
   # Scaling factors
   hz_max, hz_min = np.max(hzs), np.min(hzs)
   db_max, db_min = np.max(dbs), np.min(dbs)
-
   # Compute scaled values according to `base`
   result = []
   for i in xrange(0, n):
@@ -79,13 +81,14 @@ def gen_collage(filename):
 
   # Collect those circles
   circs = []
-  amps = [] # needed for the y-limits
+  # needed for the y-limits
+  amps = []
   for i, tup in enumerate(circ_tups):
     # Position driven by time (x) and amplitude (y)
     # Circle radius driven by scaled Hz (radius)
-    # Color driven by dB (darker == lower)
+    # Color's alpha driven by dB (darker == louder)
     x, y = i * BASE * 1.5, tup[0]
-    rand_c = '#%02x%02x%02x' % tuple(np.floor(np.random.rand(3, 1) * 255))
+    rand_c = random_color_hex()
     alpha = tup[2] / float(BASE)
     radius = tup[1]
     circs.append(plt.Circle((x, y), radius=radius, color=rand_c, alpha=alpha))
